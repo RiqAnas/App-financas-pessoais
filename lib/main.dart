@@ -3,15 +3,30 @@ import 'package:projetodespesaspessoais/components/transaction_form.dart';
 import 'package:projetodespesaspessoais/components/transaction_list.dart';
 import 'package:projetodespesaspessoais/models/transaction.dart';
 import 'dart:math';
+import 'package:google_fonts/google_fonts.dart';
 
 main() {
   runApp(ExpensesApp());
 }
 
 class ExpensesApp extends StatelessWidget {
+  ExpensesApp({super.key});
+  final ThemeData tema = ThemeData();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MyHomePage());
+    return MaterialApp(
+      home: MyHomePage(),
+      theme: ThemeData(
+        textTheme: GoogleFonts.alexandriaTextTheme(),
+        useMaterial3: false,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.deepOrange,
+          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+        ),
+        primarySwatch: Colors.orange,
+      ),
+    );
   }
 }
 
@@ -65,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Inicio"),
+        title: Text("Minhas Despesas"),
         //actions: botar widgets no appbar
         actions: <Widget>[
           IconButton(
@@ -73,7 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.add),
           ),
         ],
-        backgroundColor: Colors.orangeAccent,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -88,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text('Gráfico'),
                 //elevation adiciona uma elevação, como se estivesse saindo da tela
                 elevation: 2,
-                color: Colors.orangeAccent,
+                color: Colors.orange,
               ),
             ),
             TransactionList(_transactions),
@@ -96,9 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orangeAccent,
         onPressed: () => _openTransactionFormModal(context),
         child: Icon(Icons.add),
+        foregroundColor: Colors.black,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
