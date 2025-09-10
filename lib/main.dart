@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:projetodespesaspessoais/components/chart.dart';
 import 'package:projetodespesaspessoais/components/transaction_form.dart';
 import 'package:projetodespesaspessoais/components/transaction_list.dart';
 import 'package:projetodespesaspessoais/models/transaction.dart';
@@ -37,7 +40,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    /* Transaction(
+    Transaction(
       id: '1',
       title: 'primeira compra',
       value: 200.00,
@@ -48,8 +51,17 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'segunda compra',
       value: 150.00,
       date: DateTime.now(),
-    ),*/
+    ),
   ];
+
+  //definir quais dias farão parte da lista, filtrando os últimos 7 dias
+  List<Transaction> get _recentTransactions {
+    return _transactions
+        .where(
+          (tr) => tr.date.isAfter(DateTime.now().subtract(Duration(days: 7))),
+        )
+        .toList();
+  }
 
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
@@ -98,12 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               width: double.infinity,
-              child: Card(
-                child: Text('Gráfico'),
-                //elevation adiciona uma elevação, como se estivesse saindo da tela
-                elevation: 2,
-                color: Colors.orange,
-              ),
+              child: Chart(_recentTransactions),
             ),
             TransactionList(_transactions),
           ],
