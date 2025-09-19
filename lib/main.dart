@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:projetodespesaspessoais/components/chart.dart';
 import 'package:projetodespesaspessoais/components/transaction_form.dart';
@@ -39,20 +37,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: '1',
-      title: 'primeira compra',
-      value: 200.00,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: '2',
-      title: 'segunda compra',
-      value: 150.00,
-      date: DateTime.now(),
-    ),
-  ];
+  final List<Transaction> _transactions = [];
 
   //definir quais dias farão parte da lista, filtrando os últimos 7 dias
   List<Transaction> get _recentTransactions {
@@ -63,12 +48,12 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
-      date: DateTime.now(),
+      date: date,
     );
     setState(() {
       _transactions.add(newTransaction);
@@ -76,6 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     //para fechar o modal //metodo pop trata do primeira tela da "pilha" de telas, fechando ela
     Navigator.of(context).pop();
+  }
+
+  _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((t) => t.id == id);
+    });
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -109,10 +100,10 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              width: double.infinity,
+              width: double.maxFinite,
               child: Chart(_recentTransactions),
             ),
-            TransactionList(_transactions),
+            TransactionList(_transactions, _deleteTransaction),
           ],
         ),
       ),
