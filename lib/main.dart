@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projetodespesaspessoais/components/chart.dart';
@@ -5,6 +6,7 @@ import 'package:projetodespesaspessoais/components/transaction_form.dart';
 import 'package:projetodespesaspessoais/components/transaction_list.dart';
 import 'package:projetodespesaspessoais/models/transaction.dart';
 import 'dart:math';
+import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
 
 main() {
@@ -86,30 +88,36 @@ class _MyHomePageState extends State<MyHomePage> {
   //
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle(
-        systemNavigationBarColor: Theme.of(context).canvasColor,
-        systemNavigationBarIconBrightness: Brightness.dark,
-        statusBarColor: Colors.transparent,
+    final actions = <Widget>[
+      IconButton(
+        onPressed: () => _openTransactionFormModal(context),
+        icon: Icon(Icons.add),
       ),
-      title: Text("Minhas Despesas"),
-      //actions: botar widgets no appbar
-      actions: <Widget>[
-        IconButton(
-          onPressed: () => _openTransactionFormModal(context),
-          icon: Icon(Icons.add),
-        ),
-      ],
-    );
+    ];
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            //appBar do IOS
+            middle: Text("Minhas Despesas"),
+            trailing: Row(children: actions),
+          )
+        : AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              systemNavigationBarColor: Theme.of(context).canvasColor,
+              systemNavigationBarIconBrightness: Brightness.dark,
+              statusBarColor: Colors.transparent,
+            ),
+            title: Text("Minhas Despesas"),
+            //actions: botar widgets no appbar
+            actions: actions,
+          );
 
     final availableHeight =
         MediaQuery.of(context).size.height -
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top;
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final bodyPage = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           //mainAxis da column = Vertical
           //crossAxis da column = horizontal
@@ -128,12 +136,21 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openTransactionFormModal(context),
-        child: Icon(Icons.add),
-        foregroundColor: Colors.black,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(child: bodyPage)
+        : Scaffold(
+            appBar: appBar,
+            body: bodyPage,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () => _openTransactionFormModal(context),
+                    child: Icon(Icons.add),
+                    foregroundColor: Colors.black,
+                  ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:projetodespesaspessoais/components/adaptative_textfield.dart';
 
 class TransactionForm extends StatefulWidget {
   final void Function(String, double, DateTime) funcao;
@@ -52,19 +53,17 @@ class _TransactionFormState extends State<TransactionForm> {
       padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
-          TextField(
-            decoration: InputDecoration(labelText: "Título"),
-            //faz o formulario exercer uma função quando clica no 'enter'
-            onSubmitted: (_) => _pressed(),
+          AdaptativeTextfield(
+            label: "Título",
+            textType: TextInputType.name,
             controller: _titleController,
+            pressed: _pressed,
           ),
-          TextField(
-            decoration: InputDecoration(labelText: "Valor (R\$)"),
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            //precisa usar expressão lambda pois a função do onSubmitted precisa de um parametro e a funcao nao
-            //entao dessa forma se consegue fazer isso, se quiser ignorar o parametro basta usar (_)
-            onSubmitted: (_) => _pressed(),
+          AdaptativeTextfield(
+            label: "Valor (R\$)",
+            textType: TextInputType.numberWithOptions(decimal: true),
             controller: _valueController,
+            pressed: _pressed,
           ),
           Container(
             height: 70,
