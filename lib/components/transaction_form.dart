@@ -48,64 +48,59 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: "Título"),
-              //faz o formulario exercer uma função quando clica no 'enter'
-              onSubmitted: (_) => _pressed(),
-              controller: _titleController,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: "Valor (R\$)"),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              //precisa usar expressão lambda pois a função do onSubmitted precisa de um parametro e a funcao nao
-              //entao dessa forma se consegue fazer isso, se quiser ignorar o parametro basta usar (_)
-              onSubmitted: (_) => _pressed(),
-              controller: _valueController,
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(DateFormat("dd/MM/y").format(_selectedDate)),
-                  ),
-                  TextButton(
-                    onPressed: _showDatePicker,
-                    child: Text(
-                      'Selecionar Data',
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  //() => _pressed() seria igual
-                  onPressed: _pressed,
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(labelText: "Título"),
+            //faz o formulario exercer uma função quando clica no 'enter'
+            onSubmitted: (_) => _pressed(),
+            controller: _titleController,
+          ),
+          TextField(
+            decoration: InputDecoration(labelText: "Valor (R\$)"),
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            //precisa usar expressão lambda pois a função do onSubmitted precisa de um parametro e a funcao nao
+            //entao dessa forma se consegue fazer isso, se quiser ignorar o parametro basta usar (_)
+            onSubmitted: (_) => _pressed(),
+            controller: _valueController,
+          ),
+          Container(
+            height: 70,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(DateFormat("dd/MM/y").format(_selectedDate)),
+                ),
+                TextButton(
+                  onPressed: _showDatePicker,
                   child: Text(
-                    "Nova Transação",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
+                    'Selecionar Data',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                //() => _pressed() seria igual
+                onPressed: _pressed,
+                child: Text(
+                  "Nova Transação",
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

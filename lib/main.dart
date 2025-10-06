@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:projetodespesaspessoais/components/chart.dart';
 import 'package:projetodespesaspessoais/components/transaction_form.dart';
 import 'package:projetodespesaspessoais/components/transaction_list.dart';
@@ -16,6 +17,7 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       home: MyHomePage(),
       theme: ThemeData(
@@ -75,23 +77,38 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (_) {
         return TransactionForm(_addTransaction);
       },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+      ),
     );
   }
 
   //
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Minhas Despesas"),
-        //actions: botar widgets no appbar
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            icon: Icon(Icons.add),
-          ),
-        ],
+    final appBar = AppBar(
+      systemOverlayStyle: SystemUiOverlayStyle(
+        systemNavigationBarColor: Theme.of(context).canvasColor,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
       ),
+      title: Text("Minhas Despesas"),
+      //actions: botar widgets no appbar
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _openTransactionFormModal(context),
+          icon: Icon(Icons.add),
+        ),
+      ],
+    );
+
+    final availableHeight =
+        MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           //mainAxis da column = Vertical
@@ -101,9 +118,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               width: double.maxFinite,
+              height: availableHeight * 0.2,
               child: Chart(_recentTransactions),
             ),
-            TransactionList(_transactions, _deleteTransaction),
+            Container(
+              height: availableHeight * 0.8,
+              child: TransactionList(_transactions, _deleteTransaction),
+            ),
           ],
         ),
       ),
