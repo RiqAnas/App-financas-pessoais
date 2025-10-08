@@ -40,7 +40,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final List<Transaction> _transactions = [];
 
   //definir quais dias farão parte da lista, filtrando os últimos 7 dias
@@ -83,6 +83,27 @@ class _MyHomePageState extends State<MyHomePage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
     );
+  }
+
+  /*Verificação do estado do App, um app tem estados(Inativo, Pausado(quando
+  tá no plano de fundo e não foi "fechado de verdade"), Resumido e desativado),
+  apartir do observer e o didChangeAppLifecycleState é possível identificar
+  essas alterações e realizar ações caso elas ocorram*/
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // print(state);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   //

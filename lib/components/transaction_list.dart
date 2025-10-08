@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projetodespesaspessoais/components/transaction_listtile.dart';
 import '../models/transaction.dart';
-import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -25,38 +25,13 @@ class TransactionList extends StatelessWidget {
             itemBuilder: (ctx, index) {
               //faz a lista de widgets (como se fosse o ...)
               final transacao = transactions[index];
-              return Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(10),
-                ),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.black,
-                    child: Padding(
-                      padding: const EdgeInsets.all(6),
-                      child: FittedBox(
-                        child: Text(
-                          'R\$${transacao.value}',
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    transacao.title[0].toUpperCase() +
-                        transacao.title.substring(1),
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  subtitle: Text(DateFormat('dd/MM/y').format(transacao.date)),
-                  trailing: IconButton(
-                    onPressed: () => onDelete(transacao.id),
-                    icon: Icon(Icons.delete),
-                    color: Colors.deepOrange,
-                  ),
-                ),
+              return TransactionListtile(
+                transacao: transacao,
+                fn: onDelete,
+                //key se baseando no id da transação para que se crie uma identificação desse
+                //componente, GlobalObjectKey é cara para a otimização, chaves não são tão necessárias
+                //na maioria dos casos
+                key: GlobalObjectKey(transacao),
               );
             },
           );
